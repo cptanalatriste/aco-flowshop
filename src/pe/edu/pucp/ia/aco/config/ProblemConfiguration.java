@@ -10,7 +10,7 @@ import isula.aco.algorithms.maxmin.MaxMinConfigurationProvider;
  */
 public class ProblemConfiguration implements MaxMinConfigurationProvider {
 
-  public static final String FILE_DATASET = "C:/Users/CarlosG/Documents/GitHub/ACOFlowShop/src/flowshop_75x20.data";
+  public static final String FILE_DATASET = "C:/Users/V144615/Documents/GitHub/ACOFlowShopWithIsula/src/flowshop_75x20.data";
 
   public static final int NUMBER_OF_ANTS = 1;
   public static final double ALPHA = 1;
@@ -35,5 +35,9 @@ public class ProblemConfiguration implements MaxMinConfigurationProvider {
 
   public double getMinimumPheromoneValue() {
     return MAXIMUM_PHEROMONE / 5;
+  }
+
+  public double getQValue() {
+    return Q;
   }
 }
