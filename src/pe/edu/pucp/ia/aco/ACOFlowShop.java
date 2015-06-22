@@ -3,9 +3,9 @@ package pe.edu.pucp.ia.aco;
 import isula.aco.ACOProblemSolver;
 import isula.aco.exception.InvalidInputException;
 import isula.aco.exception.MethodNotImplementedException;
-import isula.aco.flowshop.AntForFlowShop;
-import isula.aco.flowshop.FlowShopEnvironment;
-import isula.aco.flowshop.FlowShopProblemSolver;
+import isula.aco.problems.flowshop.AntForFlowShop;
+import isula.aco.problems.flowshop.FlowShopEnvironment;
+import isula.aco.problems.flowshop.FlowShopProblemSolver;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -48,6 +48,9 @@ public class ACOFlowShop {
     try {
       String fileDataset = ProblemConfiguration.FILE_DATASET;
       System.out.println("Data file: " + fileDataset);
+
+      // TODO(cgavidia): Maybe an interface here or an utility, to produce graph
+      // from files.
       double[][] graph = getProblemGraphFromFile(fileDataset);
       ACOFlowShop acoFlowShop = new ACOFlowShop(graph);
       System.out.println("Starting computation at: " + new Date());
@@ -90,7 +93,8 @@ public class ACOFlowShop {
     });
   }
 
-  // TODO(cgavidia): Temporary fix methods.
+  // TODO(cgavidia): Temporary fix methods. We shouldn't expose the data
+  // structures here.
   public double[][] getGraph() {
     return this.problemSolver.getEnvironment().getProblemGraph();
   }
@@ -124,14 +128,7 @@ public class ACOFlowShop {
 
     // TODO(cgavidia): Temporary fix. This should go on a pheromone start
     // routine.
-    int numberOfJobs = getNumberOfJobs();
-    double[][] pheromoneTrails = getPheromoneTrails();
-
-    for (int i = 0; i < numberOfJobs; i++) {
-      for (int j = 0; j < numberOfJobs; j++) {
-        pheromoneTrails[i][j] = initialPheromoneValue;
-      }
-    }
+    this.problemSolver.applyInitialConfigurationPolicies();
 
     int iteration = 0;
     System.out.println("STARTING ITERATIONS");
@@ -156,25 +153,8 @@ public class ACOFlowShop {
    * Updates pheromone trail values
    */
   private void updatePheromoneTrails() {
-    System.out.println("UPDATING PHEROMONE TRAILS");
-
-    System.out.println("Performing evaporation on all edges");
-    System.out
-        .println("Evaporation ratio: " + ProblemConfiguration.EVAPORATION);
-
-    // TODO(cgavidia): This should go to an update pheromone routine. Maybe in
-    // Environment.
-    for (int i = 0; i < getNumberOfJobs(); i++) {
-      for (int j = 0; j < getNumberOfJobs(); j++) {
-        double newValue = getPheromoneTrails()[i][j]
-            * ProblemConfiguration.EVAPORATION;
-        if (newValue >= ProblemConfiguration.MINIMUM_PHEROMONE) {
-          getPheromoneTrails()[i][j] = newValue;
-        } else {
-          getPheromoneTrails()[i][j] = ProblemConfiguration.MINIMUM_PHEROMONE;
-        }
-      }
-    }
+    
+    this.problemSolver.applyAfterSolutionConstructionPolicies();
 
     System.out.println("Depositing pheromone on Best Ant trail.");
     AntForFlowShop bestAnt = getBestAnt();

@@ -1,6 +1,6 @@
 package pe.edu.pucp.ia.aco.config;
 
-import isula.aco.ConfigurationProvider;
+import isula.aco.algorithms.maxmin.MaxMinConfigurationProvider;
 
 /**
  * Parameter settings for the algorithm.
@@ -8,7 +8,7 @@ import isula.aco.ConfigurationProvider;
  * @author Carlos G. Gavidia (cgavidia@acm.org)
  * @author Adrián Pareja (adrian@pareja.com)
  */
-public class ProblemConfiguration implements ConfigurationProvider {
+public class ProblemConfiguration implements MaxMinConfigurationProvider {
 
   public static final String FILE_DATASET = "C:/Users/CarlosG/Documents/GitHub/ACOFlowShop/src/flowshop_75x20.data";
 
@@ -23,5 +23,17 @@ public class ProblemConfiguration implements ConfigurationProvider {
 
   public int getNumberOfAnts() {
     return NUMBER_OF_ANTS;
+  }
+
+  public double getMaximumPheromoneValue() {
+    return MAXIMUM_PHEROMONE;
+  }
+
+  public double getEvaporationRatio() {
+    return EVAPORATION;
+  }
+
+  public double getMinimumPheromoneValue() {
+    return MAXIMUM_PHEROMONE / 5;
   }
 }
