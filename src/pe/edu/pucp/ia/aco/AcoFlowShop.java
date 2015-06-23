@@ -4,6 +4,9 @@ import isula.aco.AcoProblemSolver;
 import isula.aco.exception.InvalidInputException;
 import isula.aco.problems.flowshop.FlowShopProblemSolver;
 
+import pe.edu.pucp.ia.aco.config.ProblemConfiguration;
+import pe.edu.pucp.ia.aco.view.SchedulingFrame;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -12,9 +15,6 @@ import java.util.LinkedList;
 
 import javax.swing.UnsupportedLookAndFeelException;
 
-import pe.edu.pucp.ia.aco.config.ProblemConfiguration;
-import pe.edu.pucp.ia.aco.view.SchedulingFrame;
-
 /**
  * Appies the MAX-MIN Ant System algorithm to Flow-Shop Problem instance.
  * 
@@ -22,16 +22,30 @@ import pe.edu.pucp.ia.aco.view.SchedulingFrame;
  * @author Adrián Pareja (adrian@pareja.com)
  * 
  */
-public class ACOFlowShop {
+public class AcoFlowShop {
 
   private AcoProblemSolver problemSolver;
 
-  public ACOFlowShop(double[][] graph) throws InvalidInputException {
+  /**
+   * Generates an AcoFlowShop instance.
+   * 
+   * @param graph
+   *          Graph representation of the problem.
+   * @throws InvalidInputException
+   *           Generated if the graph is not correct.
+   */
+  public AcoFlowShop(double[][] graph) throws InvalidInputException {
 
     this.problemSolver = new FlowShopProblemSolver(graph,
         new ProblemConfiguration());
   }
 
+  /**
+   * Entry point for this solution.
+   * 
+   * @param args
+   *          Arguments for the application.
+   */
   public static void main(String... args) {
     System.out.println("ACO FOR FLOW SHOP SCHEDULLING");
     System.out.println("=============================");
@@ -43,7 +57,7 @@ public class ACOFlowShop {
       // TODO(cgavidia): Maybe an interface here or an utility, to produce graph
       // from files.
       double[][] graph = getProblemGraphFromFile(fileDataset);
-      ACOFlowShop acoFlowShop = new ACOFlowShop(graph);
+      AcoFlowShop acoFlowShop = new AcoFlowShop(graph);
       System.out.println("Starting computation at: " + new Date());
       long startTime = System.nanoTime();
       acoFlowShop.solveProblem();
@@ -88,7 +102,6 @@ public class ACOFlowShop {
   /**
    * Solves a Flow-Shop instance using Ant Colony Optimization.
    * 
-   * @return Array representing a solution.
    */
   public void solveProblem() {
 
@@ -99,39 +112,39 @@ public class ACOFlowShop {
   }
 
   /**
-   * 
    * Reads a text file and returns a problem matrix.
    * 
    * @param path
    *          File to read.
    * @return Problem matrix.
    * @throws IOException
+   *           If an error produces while reading the file.
    */
   public static double[][] getProblemGraphFromFile(String path)
       throws IOException {
-    double graph[][] = null;
+    double[][] graph = null;
     FileReader fr = new FileReader(path);
     BufferedReader buf = new BufferedReader(fr);
     String line;
-    int i = 0;
+    int index = 0;
 
     while ((line = buf.readLine()) != null) {
-      if (i > 0) {
-        String splitA[] = line.split(" ");
+      if (index > 0) {
+        String[] splitA = line.split(" ");
         LinkedList<String> split = new LinkedList<String>();
         for (String s : splitA) {
           if (!s.isEmpty()) {
             split.add(s);
           }
         }
-        int j = 0;
-        for (String s : split) {
-          if (!s.isEmpty()) {
-            graph[i - 1][j++] = Integer.parseInt(s);
+        int column = 0;
+        for (String anString : split) {
+          if (!anString.isEmpty()) {
+            graph[index - 1][column++] = Integer.parseInt(anString);
           }
         }
       } else {
-        String firstLine[] = line.split(" ");
+        String[] firstLine = line.split(" ");
         String numberOfJobs = firstLine[0];
         String numberOfMachines = firstLine[1];
 
@@ -140,7 +153,7 @@ public class ACOFlowShop {
               .parseInt(numberOfMachines)];
         }
       }
-      i++;
+      index++;
     }
 
     buf.close();
