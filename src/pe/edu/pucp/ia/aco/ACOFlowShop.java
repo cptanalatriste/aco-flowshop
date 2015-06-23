@@ -34,11 +34,10 @@ public class ACOFlowShop {
 
   private AcoProblemSolver problemSolver;
 
-  public ACOFlowShop(double[][] graph) throws InvalidInputException,
-      MethodNotImplementedException {
+  public ACOFlowShop(double[][] graph) throws InvalidInputException {
 
     this.problemSolver = new FlowShopProblemSolver(graph,
-	new ProblemConfiguration());
+        new ProblemConfiguration());
   }
 
   public static void main(String... args) {
@@ -59,7 +58,7 @@ public class ACOFlowShop {
       long endTime = System.nanoTime();
       System.out.println("Finishing computation at: " + new Date());
       System.out.println("Duration (in seconds): "
-	  + ((double) (endTime - startTime) / 1000000000.0));
+          + ((double) (endTime - startTime) / 1000000000.0));
       acoFlowShop.showSolution();
     } catch (Exception e) {
       e.printStackTrace();
@@ -70,10 +69,10 @@ public class ACOFlowShop {
       InstantiationException, IllegalAccessException,
       UnsupportedLookAndFeelException {
     for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager
-	.getInstalledLookAndFeels()) {
+        .getInstalledLookAndFeels()) {
       if ("Nimbus".equals(info.getName())) {
-	javax.swing.UIManager.setLookAndFeel(info.getClassName());
-	break;
+        javax.swing.UIManager.setLookAndFeel(info.getClassName());
+        break;
       }
     }
 
@@ -82,12 +81,12 @@ public class ACOFlowShop {
 
     java.awt.EventQueue.invokeLater(new Runnable() {
       public void run() {
-	SchedulingFrame frame = new SchedulingFrame();
-	frame.setSolutionMakespan(bestScheduleMakespan);
+        SchedulingFrame frame = new SchedulingFrame();
+        frame.setSolutionMakespan(bestScheduleMakespan);
 
-	frame.setProblemGraph(graph);
-	frame.setSolution(bestTour);
-	frame.setVisible(true);
+        frame.setProblemGraph(graph);
+        frame.setSolution(bestTour);
+        frame.setVisible(true);
 
       }
     });
@@ -101,7 +100,7 @@ public class ACOFlowShop {
 
   public int getNumberOfJobs() {
     return ((FlowShopEnvironment) this.problemSolver.getEnvironment())
-	.getNumberOfJobs();
+        .getNumberOfJobs();
   }
 
   public double[][] getPheromoneTrails() {
@@ -112,8 +111,8 @@ public class ACOFlowShop {
     // TODO(cgavidia): Dirty fix to get this working
 
     return Arrays.copyOf(this.problemSolver.getAntColony().getHive(),
-	this.problemSolver.getAntColony().getHive().length,
-	AntForFlowShop[].class);
+        this.problemSolver.getAntColony().getHive().length,
+        AntForFlowShop[].class);
   }
 
   /**
@@ -133,7 +132,7 @@ public class ACOFlowShop {
     int iteration = 0;
     System.out.println("STARTING ITERATIONS");
     System.out.println("Number of iterations: "
-	+ ProblemConfiguration.MAX_ITERATIONS);
+        + ProblemConfiguration.MAX_ITERATIONS);
 
     while (iteration < ProblemConfiguration.MAX_ITERATIONS) {
       System.out.println("Current iteration: " + iteration);
@@ -153,7 +152,6 @@ public class ACOFlowShop {
    * Updates pheromone trail values
    */
   private void updatePheromoneTrails() {
-
     this.problemSolver.applyAfterSolutionConstructionPolicies();
   }
 
@@ -166,16 +164,17 @@ public class ACOFlowShop {
     for (AntForFlowShop ant : getAntColony()) {
       System.out.println("Current ant: " + antCounter);
       while (ant.getCurrentIndex() < getNumberOfJobs()) {
-	int nextNode = ant.selectNextNode(getPheromoneTrails(), getGraph());
-	ant.visitNode(nextNode);
+        //int nextNode = ant.selectNextNode(getPheromoneTrails(), getGraph());
+        //ant.visitNode(nextNode);
+        ant.selectNextNode(this.problemSolver.getEnvironment(), new ProblemConfiguration());
       }
       System.out.println("Original Solution > Makespan: "
-	  + ant.getSolutionQuality(this.problemSolver.getEnvironment())
-	  + ", Schedule: " + ant.getSolutionAsString());
+          + ant.getSolutionQuality(this.problemSolver.getEnvironment())
+          + ", Schedule: " + ant.getSolutionAsString());
       ant.improveSolution(this.problemSolver.getEnvironment());
       System.out.println("After Local Search > Makespan: "
-	  + ant.getSolutionQuality(this.problemSolver.getEnvironment())
-	  + ", Schedule: " + ant.getSolutionAsString());
+          + ant.getSolutionQuality(this.problemSolver.getEnvironment())
+          + ", Schedule: " + ant.getSolutionAsString());
       antCounter++;
     }
   }
@@ -199,7 +198,7 @@ public class ACOFlowShop {
   private AntForFlowShop getBestAnt() {
     // TODO(cgavidia): Very ugly hack while refactoring
     return (AntForFlowShop) this.problemSolver.getAntColony()
-	.getBestPerformingAnt(this.problemSolver.getEnvironment());
+        .getBestPerformingAnt(this.problemSolver.getEnvironment());
   }
 
   /**
@@ -211,15 +210,15 @@ public class ACOFlowShop {
     System.out.println("GETTING BEST SOLUTION FOUND");
     AntForFlowShop bestAnt = getBestAnt();
     if (bestTour == null
-	|| bestScheduleMakespan > bestAnt.getSolutionQuality(this.problemSolver
-	    .getEnvironment())) {
+        || bestScheduleMakespan > bestAnt.getSolutionQuality(this.problemSolver
+            .getEnvironment())) {
       bestTour = bestAnt.getSolution().clone();
       bestScheduleMakespan = bestAnt.getSolutionQuality(this.problemSolver
-	  .getEnvironment());
+          .getEnvironment());
       bestScheduleAsString = bestAnt.getSolutionAsString();
     }
     System.out.println("Best solution so far > Makespan: "
-	+ bestScheduleMakespan + ", Schedule: " + bestScheduleAsString);
+        + bestScheduleMakespan + ", Schedule: " + bestScheduleAsString);
   }
 
   /**
@@ -241,28 +240,28 @@ public class ACOFlowShop {
 
     while ((line = buf.readLine()) != null) {
       if (i > 0) {
-	String splitA[] = line.split(" ");
-	LinkedList<String> split = new LinkedList<String>();
-	for (String s : splitA) {
-	  if (!s.isEmpty()) {
-	    split.add(s);
-	  }
-	}
-	int j = 0;
-	for (String s : split) {
-	  if (!s.isEmpty()) {
-	    graph[i - 1][j++] = Integer.parseInt(s);
-	  }
-	}
+        String splitA[] = line.split(" ");
+        LinkedList<String> split = new LinkedList<String>();
+        for (String s : splitA) {
+          if (!s.isEmpty()) {
+            split.add(s);
+          }
+        }
+        int j = 0;
+        for (String s : split) {
+          if (!s.isEmpty()) {
+            graph[i - 1][j++] = Integer.parseInt(s);
+          }
+        }
       } else {
-	String firstLine[] = line.split(" ");
-	String numberOfJobs = firstLine[0];
-	String numberOfMachines = firstLine[1];
+        String firstLine[] = line.split(" ");
+        String numberOfJobs = firstLine[0];
+        String numberOfMachines = firstLine[1];
 
-	if (graph == null) {
-	  graph = new double[Integer.parseInt(numberOfJobs)][Integer
-	      .parseInt(numberOfMachines)];
-	}
+        if (graph == null) {
+          graph = new double[Integer.parseInt(numberOfJobs)][Integer
+              .parseInt(numberOfMachines)];
+        }
       }
       i++;
     }

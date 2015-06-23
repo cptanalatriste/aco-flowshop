@@ -1,5 +1,6 @@
 package pe.edu.pucp.ia.aco.config;
 
+import isula.aco.algorithms.acs.AcsConfigurationProvider;
 import isula.aco.algorithms.maxmin.MaxMinConfigurationProvider;
 
 /**
@@ -8,9 +9,12 @@ import isula.aco.algorithms.maxmin.MaxMinConfigurationProvider;
  * @author Carlos G. Gavidia (cgavidia@acm.org)
  * @author Adrián Pareja (adrian@pareja.com)
  */
-public class ProblemConfiguration implements MaxMinConfigurationProvider {
+public class ProblemConfiguration implements MaxMinConfigurationProvider,
+    AcsConfigurationProvider {
 
-  public static final String FILE_DATASET = "C:/Users/V144615/Documents/GitHub/ACOFlowShopWithIsula/src/flowshop_75x20.data";
+  // public static final String FILE_DATASET =
+  // "C:/Users/V144615/Documents/GitHub/ACOFlowShopWithIsula/src/flowshop_75x20.data";
+  public static final String FILE_DATASET = "C:/Users/CarlosG/Documents/GitHub/ACOFlowShopWithIsula/src/flowshop_75x20.data";
 
   public static final int NUMBER_OF_ANTS = 1;
   public static final double ALPHA = 1;
@@ -39,5 +43,9 @@ public class ProblemConfiguration implements MaxMinConfigurationProvider {
 
   public double getQValue() {
     return Q;
+  }
+
+  public int getBestChoiceConstant() {
+    return 4;
   }
 }
