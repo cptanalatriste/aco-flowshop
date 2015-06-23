@@ -1,6 +1,6 @@
 package pe.edu.pucp.ia.aco;
 
-import isula.aco.ACOProblemSolver;
+import isula.aco.AcoProblemSolver;
 import isula.aco.exception.InvalidInputException;
 import isula.aco.exception.MethodNotImplementedException;
 import isula.aco.problems.flowshop.AntForFlowShop;
@@ -32,7 +32,7 @@ public class ACOFlowShop {
   String bestScheduleAsString = "";
   public double bestScheduleMakespan = -1.0;
 
-  private ACOProblemSolver problemSolver;
+  private AcoProblemSolver problemSolver;
 
   public ACOFlowShop(double[][] graph) throws InvalidInputException,
       MethodNotImplementedException {
