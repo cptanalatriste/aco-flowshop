@@ -2,7 +2,6 @@ package pe.edu.pucp.ia.aco;
 
 import isula.aco.AcoProblemSolver;
 import isula.aco.exception.InvalidInputException;
-import isula.aco.exception.MethodNotImplementedException;
 import isula.aco.problems.flowshop.AntForFlowShop;
 import isula.aco.problems.flowshop.FlowShopEnvironment;
 import isula.aco.problems.flowshop.FlowShopProblemSolver;
@@ -164,9 +163,8 @@ public class ACOFlowShop {
     for (AntForFlowShop ant : getAntColony()) {
       System.out.println("Current ant: " + antCounter);
       while (ant.getCurrentIndex() < getNumberOfJobs()) {
-        //int nextNode = ant.selectNextNode(getPheromoneTrails(), getGraph());
-        //ant.visitNode(nextNode);
-        ant.selectNextNode(this.problemSolver.getEnvironment(), new ProblemConfiguration());
+        ant.selectNextNode(this.problemSolver.getEnvironment(),
+            new ProblemConfiguration());
       }
       System.out.println("Original Solution > Makespan: "
           + ant.getSolutionQuality(this.problemSolver.getEnvironment())
