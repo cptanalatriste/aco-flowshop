@@ -48,4 +48,8 @@ public class ProblemConfiguration implements MaxMinConfigurationProvider,
   public int getBestChoiceConstant() {
     return 4;
   }
+
+  public int getNumberOfIterations() {
+    return MAX_ITERATIONS;
+  }
 }

@@ -2,14 +2,11 @@ package pe.edu.pucp.ia.aco;
 
 import isula.aco.AcoProblemSolver;
 import isula.aco.exception.InvalidInputException;
-import isula.aco.problems.flowshop.AntForFlowShop;
-import isula.aco.problems.flowshop.FlowShopEnvironment;
 import isula.aco.problems.flowshop.FlowShopProblemSolver;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 
@@ -26,10 +23,6 @@ import pe.edu.pucp.ia.aco.view.SchedulingFrame;
  * 
  */
 public class ACOFlowShop {
-
-  public int[] bestTour;
-  String bestScheduleAsString = "";
-  public double bestScheduleMakespan = -1.0;
 
   private AcoProblemSolver problemSolver;
 
@@ -76,42 +69,20 @@ public class ACOFlowShop {
     }
 
     // TODO(cgavidia): Doesn't seem like a clean way, but it will do the job.
-    final double[][] graph = getGraph();
+    final double[][] graph = this.problemSolver.getEnvironment()
+        .getProblemGraph();
 
     java.awt.EventQueue.invokeLater(new Runnable() {
       public void run() {
         SchedulingFrame frame = new SchedulingFrame();
-        frame.setSolutionMakespan(bestScheduleMakespan);
+        frame.setSolutionMakespan(problemSolver.getBestSolutionQuality());
 
         frame.setProblemGraph(graph);
-        frame.setSolution(bestTour);
+        frame.setSolution(problemSolver.getBestSolution());
         frame.setVisible(true);
 
       }
     });
-  }
-
-  // TODO(cgavidia): Temporary fix methods. We shouldn't expose the data
-  // structures here.
-  public double[][] getGraph() {
-    return this.problemSolver.getEnvironment().getProblemGraph();
-  }
-
-  public int getNumberOfJobs() {
-    return ((FlowShopEnvironment) this.problemSolver.getEnvironment())
-        .getNumberOfJobs();
-  }
-
-  public double[][] getPheromoneTrails() {
-    return this.problemSolver.getEnvironment().getPheromoneMatrix();
-  }
-
-  public AntForFlowShop[] getAntColony() {
-    // TODO(cgavidia): Dirty fix to get this working
-
-    return Arrays.copyOf(this.problemSolver.getAntColony().getHive(),
-        this.problemSolver.getAntColony().getHive().length,
-        AntForFlowShop[].class);
   }
 
   /**
@@ -119,104 +90,12 @@ public class ACOFlowShop {
    * 
    * @return Array representing a solution.
    */
-  public int[] solveProblem() {
-    System.out.println("INITIALIZING PHEROMONE MATRIX");
-    double initialPheromoneValue = ProblemConfiguration.MAXIMUM_PHEROMONE;
-    System.out.println("Initial pheromone value: " + initialPheromoneValue);
+  public void solveProblem() {
 
     // TODO(cgavidia): Temporary fix. This should go on a pheromone start
     // routine.
-    this.problemSolver.applyInitialConfigurationPolicies();
 
-    int iteration = 0;
-    System.out.println("STARTING ITERATIONS");
-    System.out.println("Number of iterations: "
-        + ProblemConfiguration.MAX_ITERATIONS);
-
-    while (iteration < ProblemConfiguration.MAX_ITERATIONS) {
-      System.out.println("Current iteration: " + iteration);
-      clearAntSolutions();
-      buildSolutions();
-      updatePheromoneTrails();
-      updateBestSolution();
-      iteration++;
-    }
-    System.out.println("EXECUTION FINISHED");
-    System.out.println("Best schedule makespam: " + bestScheduleMakespan);
-    System.out.println("Best schedule:" + bestScheduleAsString);
-    return bestTour.clone();
-  }
-
-  /**
-   * Updates pheromone trail values
-   */
-  private void updatePheromoneTrails() {
-    this.problemSolver.applyAfterSolutionConstructionPolicies();
-  }
-
-  /**
-   * Build a solution for every Ant in the Colony.
-   */
-  private void buildSolutions() {
-    System.out.println("BUILDING ANT SOLUTIONS");
-    int antCounter = 0;
-    for (AntForFlowShop ant : getAntColony()) {
-      System.out.println("Current ant: " + antCounter);
-      while (ant.getCurrentIndex() < getNumberOfJobs()) {
-        ant.selectNextNode(this.problemSolver.getEnvironment(),
-            new ProblemConfiguration());
-      }
-      System.out.println("Original Solution > Makespan: "
-          + ant.getSolutionQuality(this.problemSolver.getEnvironment())
-          + ", Schedule: " + ant.getSolutionAsString());
-      ant.improveSolution(this.problemSolver.getEnvironment());
-      System.out.println("After Local Search > Makespan: "
-          + ant.getSolutionQuality(this.problemSolver.getEnvironment())
-          + ", Schedule: " + ant.getSolutionAsString());
-      antCounter++;
-    }
-  }
-
-  /**
-   * Clears solution build for every Ant in the colony.
-   */
-  private void clearAntSolutions() {
-    System.out.println("CLEARING ANT SOLUTIONS");
-    for (AntForFlowShop ant : getAntColony()) {
-      ant.setCurrentIndex(0);
-      ant.clear();
-    }
-  }
-
-  /**
-   * Returns the best performing Ant in Colony
-   * 
-   * @return The Best Ant
-   */
-  private AntForFlowShop getBestAnt() {
-    // TODO(cgavidia): Very ugly hack while refactoring
-    return (AntForFlowShop) this.problemSolver.getAntColony()
-        .getBestPerformingAnt(this.problemSolver.getEnvironment());
-  }
-
-  /**
-   * Selects the best solution found so far.
-   * 
-   * @return
-   */
-  private void updateBestSolution() {
-    System.out.println("GETTING BEST SOLUTION FOUND");
-    AntForFlowShop bestAnt = getBestAnt();
-    if (bestTour == null
-        || bestScheduleMakespan > bestAnt.getSolutionQuality(this.problemSolver
-            .getEnvironment())) {
-      bestTour = bestAnt.getSolution().clone();
-      bestScheduleMakespan = bestAnt.getSolutionQuality(this.problemSolver
-          .getEnvironment());
-      bestScheduleAsString = bestAnt.getSolutionAsString();
-    }
-    System.out.println("Best solution so far > Makespan: "
-        + bestScheduleMakespan + ", Schedule: " + bestScheduleAsString);
+    this.problemSolver.solveProblem();
   }
 
   /**
