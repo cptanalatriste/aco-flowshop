@@ -16,7 +16,7 @@ public class SchedulingFrame extends javax.swing.JFrame {
   private static final String MAKESPAN_LABEL = "Solution makespan: ";
   private static final String FRAME_TITLE = "A solution for the Flow-Shop problem";
   private static final long serialVersionUID = 6254510777986769141L;
-  private int[] solution;
+  private Integer[] solution;
   private double solutionMakespan;
   private double[][] problemGraph;
 
@@ -94,8 +94,8 @@ public class SchedulingFrame extends javax.swing.JFrame {
         if (i == 0) {
           if (posX == 20) {
             machinesTime[i] = machinesTime[i] + tiempo;
-            graphics.fillRect(i * (int) machinesTime[i] / factor, posY, (int) tiempo
-                / factor, height);
+            graphics.fillRect(i * (int) machinesTime[i] / factor, posY,
+                (int) tiempo / factor, height);
             posX = 40;
           } else {
             machinesTime[i] = machinesTime[i] + tiempo;
@@ -104,13 +104,13 @@ public class SchedulingFrame extends javax.swing.JFrame {
           }
         } else {
           if (machinesTime[i] > machinesTime[i - 1]) {
-            graphics.fillRect((int) (machinesTime[i]) / factor, posY, (int) tiempo
-                / factor, height);
+            graphics.fillRect((int) (machinesTime[i]) / factor, posY,
+                (int) tiempo / factor, height);
             machinesTime[i] = machinesTime[i] + tiempo;
           } else {
             machinesTime[i] = machinesTime[i - 1] + tiempo;
-            graphics.fillRect((int) machinesTime[i - 1] / factor, posY, (int) tiempo
-                / factor, height);
+            graphics.fillRect((int) machinesTime[i - 1] / factor, posY,
+                (int) tiempo / factor, height);
           }
         }
       }
@@ -118,7 +118,7 @@ public class SchedulingFrame extends javax.swing.JFrame {
 
   }
 
-  public void setSolution(int[] schedulingJobs) {
+  public void setSolution(Integer[] schedulingJobs) {
     this.solution = schedulingJobs;
   }
 

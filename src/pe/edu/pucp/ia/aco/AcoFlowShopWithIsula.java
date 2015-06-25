@@ -15,6 +15,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -44,16 +45,16 @@ public class AcoFlowShopWithIsula {
       double[][] graph = getProblemGraphFromFile(fileDataset);
       System.out.println("Data file: " + fileDataset);
 
-      AcoProblemSolver problemSolver;
+      FlowShopProblemSolver problemSolver;
 
       ProblemConfiguration configurationProvider = new ProblemConfiguration();
       problemSolver = new FlowShopProblemSolver(graph, configurationProvider);
 
-      problemSolver.addDaemonAction(new StartPheromoneMatrixPolicy());
+      problemSolver.addDaemonAction(new StartPheromoneMatrixPolicy<Integer>());
       problemSolver.addDaemonAction(new UpdatePheromoneMatrixPolicy());
 
-      Ant[] hive = problemSolver.getAntColony().getHive();
-      for (Ant ant : hive) {
+      List<Ant<Integer>> hive = problemSolver.getAntColony().getHive();
+      for (Ant<Integer> ant : hive) {
         ant.addPolicy(new PseudoRandomNodeSelection());
         ant.addPolicy(new LocalSearchPolicy());
       }
@@ -66,9 +67,9 @@ public class AcoFlowShopWithIsula {
   }
 
   private static void showSolution(final double[][] graph,
-      final AcoProblemSolver problemSolver) throws ClassNotFoundException,
-      InstantiationException, IllegalAccessException,
-      UnsupportedLookAndFeelException {
+      final AcoProblemSolver<Integer> problemSolver)
+      throws ClassNotFoundException, InstantiationException,
+      IllegalAccessException, UnsupportedLookAndFeelException {
     for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager
         .getInstalledLookAndFeels()) {
       if ("Nimbus".equals(info.getName())) {
