@@ -1,8 +1,13 @@
 package pe.edu.pucp.ia.aco;
 
 import isula.aco.AcoProblemSolver;
+import isula.aco.Ant;
+import isula.aco.algorithms.acs.PseudoRandomNodeSelection;
+import isula.aco.algorithms.maxmin.StartPheromoneMatrixPolicy;
+import isula.aco.algorithms.maxmin.UpdatePheromoneMatrixPolicy;
 import isula.aco.exception.InvalidInputException;
 import isula.aco.problems.flowshop.FlowShopProblemSolver;
+import isula.aco.problems.flowshop.LocalSearchPolicy;
 
 import pe.edu.pucp.ia.aco.config.ProblemConfiguration;
 import pe.edu.pucp.ia.aco.view.SchedulingFrame;
@@ -10,7 +15,6 @@ import pe.edu.pucp.ia.aco.view.SchedulingFrame;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Date;
 import java.util.LinkedList;
 
 import javax.swing.UnsupportedLookAndFeelException;
@@ -19,10 +23,10 @@ import javax.swing.UnsupportedLookAndFeelException;
  * Appies the MAX-MIN Ant System algorithm to Flow-Shop Problem instance.
  * 
  * @author Carlos G. Gavidia (cgavidia@acm.org)
- * @author Adrián Pareja (adrian@pareja.com)
+ * @author Adrian Pareja (adrian@pareja.com)
  * 
  */
-public class AcoFlowShop {
+public class AcoFlowShopWithIsula {
 
   private AcoProblemSolver problemSolver;
 
@@ -34,10 +38,20 @@ public class AcoFlowShop {
    * @throws InvalidInputException
    *           Generated if the graph is not correct.
    */
-  public AcoFlowShop(double[][] graph) throws InvalidInputException {
+  public AcoFlowShopWithIsula(double[][] graph) throws InvalidInputException {
 
-    this.problemSolver = new FlowShopProblemSolver(graph,
-        new ProblemConfiguration());
+    ProblemConfiguration configurationProvider = new ProblemConfiguration();
+    this.problemSolver = new FlowShopProblemSolver(graph, configurationProvider);
+
+    this.problemSolver.addDaemonAction(new StartPheromoneMatrixPolicy());
+    this.problemSolver.addDaemonAction(new UpdatePheromoneMatrixPolicy());
+
+    Ant[] hive = this.problemSolver.getAntColony().getHive();
+    for (Ant ant : hive) {
+      ant.addPolicy(new PseudoRandomNodeSelection());
+      ant.addPolicy(new LocalSearchPolicy());
+    }
+
   }
 
   /**
@@ -52,26 +66,35 @@ public class AcoFlowShop {
 
     try {
       String fileDataset = ProblemConfiguration.FILE_DATASET;
-      System.out.println("Data file: " + fileDataset);
 
       // TODO(cgavidia): Maybe an interface here or an utility, to produce graph
       // from files.
       double[][] graph = getProblemGraphFromFile(fileDataset);
-      AcoFlowShop acoFlowShop = new AcoFlowShop(graph);
-      System.out.println("Starting computation at: " + new Date());
-      long startTime = System.nanoTime();
-      acoFlowShop.solveProblem();
-      long endTime = System.nanoTime();
-      System.out.println("Finishing computation at: " + new Date());
-      System.out.println("Duration (in seconds): "
-          + ((double) (endTime - startTime) / 1000000000.0));
-      acoFlowShop.showSolution();
+      System.out.println("Data file: " + fileDataset);
+
+      AcoProblemSolver problemSolver;
+
+      ProblemConfiguration configurationProvider = new ProblemConfiguration();
+      problemSolver = new FlowShopProblemSolver(graph, configurationProvider);
+
+      problemSolver.addDaemonAction(new StartPheromoneMatrixPolicy());
+      problemSolver.addDaemonAction(new UpdatePheromoneMatrixPolicy());
+
+      Ant[] hive = problemSolver.getAntColony().getHive();
+      for (Ant ant : hive) {
+        ant.addPolicy(new PseudoRandomNodeSelection());
+        ant.addPolicy(new LocalSearchPolicy());
+      }
+
+      problemSolver.solveProblem();
+      showSolution(graph, problemSolver);
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
 
-  private void showSolution() throws ClassNotFoundException,
+  private static void showSolution(final double[][] graph,
+      final AcoProblemSolver problemSolver) throws ClassNotFoundException,
       InstantiationException, IllegalAccessException,
       UnsupportedLookAndFeelException {
     for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager
@@ -81,10 +104,6 @@ public class AcoFlowShop {
         break;
       }
     }
-
-    // TODO(cgavidia): Doesn't seem like a clean way, but it will do the job.
-    final double[][] graph = this.problemSolver.getEnvironment()
-        .getProblemGraph();
 
     java.awt.EventQueue.invokeLater(new Runnable() {
       public void run() {
@@ -97,18 +116,6 @@ public class AcoFlowShop {
 
       }
     });
-  }
-
-  /**
-   * Solves a Flow-Shop instance using Ant Colony Optimization.
-   * 
-   */
-  public void solveProblem() {
-
-    // TODO(cgavidia): Temporary fix. This should go on a pheromone start
-    // routine.
-
-    this.problemSolver.solveProblem();
   }
 
   /**
