@@ -23,7 +23,6 @@ import javax.swing.UnsupportedLookAndFeelException;
  * 
  * @author Carlos G. Gavidia (cgavidia@acm.org)
  * @author Adrian Pareja (adrian@pareja.com)
- * 
  */
 public class AcoFlowShopWithIsula {
 
