@@ -5,7 +5,6 @@ import isula.aco.Ant;
 import isula.aco.algorithms.acs.PseudoRandomNodeSelection;
 import isula.aco.algorithms.maxmin.StartPheromoneMatrixPolicy;
 import isula.aco.algorithms.maxmin.UpdatePheromoneMatrixPolicy;
-import isula.aco.exception.InvalidInputException;
 import isula.aco.problems.flowshop.FlowShopProblemSolver;
 import isula.aco.problems.flowshop.LocalSearchPolicy;
 
@@ -27,32 +26,6 @@ import javax.swing.UnsupportedLookAndFeelException;
  * 
  */
 public class AcoFlowShopWithIsula {
-
-  private AcoProblemSolver problemSolver;
-
-  /**
-   * Generates an AcoFlowShop instance.
-   * 
-   * @param graph
-   *          Graph representation of the problem.
-   * @throws InvalidInputException
-   *           Generated if the graph is not correct.
-   */
-  public AcoFlowShopWithIsula(double[][] graph) throws InvalidInputException {
-
-    ProblemConfiguration configurationProvider = new ProblemConfiguration();
-    this.problemSolver = new FlowShopProblemSolver(graph, configurationProvider);
-
-    this.problemSolver.addDaemonAction(new StartPheromoneMatrixPolicy());
-    this.problemSolver.addDaemonAction(new UpdatePheromoneMatrixPolicy());
-
-    Ant[] hive = this.problemSolver.getAntColony().getHive();
-    for (Ant ant : hive) {
-      ant.addPolicy(new PseudoRandomNodeSelection());
-      ant.addPolicy(new LocalSearchPolicy());
-    }
-
-  }
 
   /**
    * Entry point for this solution.
