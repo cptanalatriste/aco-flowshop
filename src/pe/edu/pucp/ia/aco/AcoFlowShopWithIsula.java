@@ -3,8 +3,8 @@ package pe.edu.pucp.ia.aco;
 import isula.aco.AcoProblemSolver;
 import isula.aco.Ant;
 import isula.aco.algorithms.acs.PseudoRandomNodeSelection;
-import isula.aco.algorithms.maxmin.StartPheromoneMatrixPolicy;
-import isula.aco.algorithms.maxmin.UpdatePheromoneMatrixPolicy;
+import isula.aco.algorithms.maxmin.StartPheromoneMatrixForMaxMin;
+import isula.aco.algorithms.maxmin.UpdatePheromoneMatrixForMaxMin;
 import isula.aco.problems.flowshop.FlowShopProblemSolver;
 import isula.aco.problems.flowshop.LocalSearchPolicy;
 
@@ -50,8 +50,9 @@ public class AcoFlowShopWithIsula {
       ProblemConfiguration configurationProvider = new ProblemConfiguration();
       problemSolver = new FlowShopProblemSolver(graph, configurationProvider);
 
-      problemSolver.addDaemonAction(new StartPheromoneMatrixPolicy<Integer>());
-      problemSolver.addDaemonAction(new UpdatePheromoneMatrixPolicy());
+      problemSolver
+          .addDaemonAction(new StartPheromoneMatrixForMaxMin<Integer>());
+      problemSolver.addDaemonAction(new UpdatePheromoneMatrixForMaxMin());
 
       List<Ant<Integer>> hive = problemSolver.getAntColony().getHive();
       for (Ant<Integer> ant : hive) {
