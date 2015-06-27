@@ -7,7 +7,6 @@ import isula.aco.algorithms.maxmin.StartPheromoneMatrixForMaxMin;
 import isula.aco.algorithms.maxmin.UpdatePheromoneMatrixForMaxMin;
 import isula.aco.problems.flowshop.FlowShopProblemSolver;
 import isula.aco.problems.flowshop.LocalSearchPolicy;
-
 import pe.edu.pucp.ia.aco.config.ProblemConfiguration;
 import pe.edu.pucp.ia.aco.view.SchedulingFrame;
 
@@ -16,6 +15,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -27,6 +27,9 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class AcoFlowShopWithIsula {
 
+  private static Logger logger = Logger.getLogger(AcoFlowShopWithIsula.class
+      .getName());
+
   /**
    * Entry point for this solution.
    * 
@@ -34,8 +37,8 @@ public class AcoFlowShopWithIsula {
    *          Arguments for the application.
    */
   public static void main(String... args) {
-    System.out.println("ACO FOR FLOW SHOP SCHEDULLING");
-    System.out.println("=============================");
+    logger.info("ACO FOR FLOW SHOP SCHEDULLING");
+    logger.info("=============================");
 
     try {
       String fileDataset = ProblemConfiguration.FILE_DATASET;
@@ -43,7 +46,7 @@ public class AcoFlowShopWithIsula {
       // TODO(cgavidia): Maybe an interface here or an utility, to produce graph
       // from files.
       double[][] graph = getProblemGraphFromFile(fileDataset);
-      System.out.println("Data file: " + fileDataset);
+      logger.info("Data file: " + fileDataset);
 
       FlowShopProblemSolver problemSolver;
 
@@ -52,11 +55,12 @@ public class AcoFlowShopWithIsula {
 
       problemSolver
           .addDaemonAction(new StartPheromoneMatrixForMaxMin<Integer>());
-      problemSolver.addDaemonAction(new UpdatePheromoneMatrixForMaxMin());
+      problemSolver
+          .addDaemonAction(new UpdatePheromoneMatrixForMaxMin<Integer>());
 
       List<Ant<Integer>> hive = problemSolver.getAntColony().getHive();
       for (Ant<Integer> ant : hive) {
-        ant.addPolicy(new PseudoRandomNodeSelection());
+        ant.addPolicy(new PseudoRandomNodeSelection<Integer>());
         ant.addPolicy(new LocalSearchPolicy());
       }
 
@@ -128,6 +132,9 @@ public class AcoFlowShopWithIsula {
         String[] firstLine = line.split(" ");
         String numberOfJobs = firstLine[0];
         String numberOfMachines = firstLine[1];
+
+        logger.info("numberOfJobs=" + numberOfJobs + ", numberOfMachines="
+            + numberOfMachines);
 
         if (graph == null) {
           graph = new double[Integer.parseInt(numberOfJobs)][Integer

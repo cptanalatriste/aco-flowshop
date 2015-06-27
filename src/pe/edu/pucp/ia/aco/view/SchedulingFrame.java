@@ -8,7 +8,7 @@ import java.util.Random;
  * Class that shows graphically a solution for an instance of the Flow-Shop
  * Schedulig problem.
  * 
- * @author Adrián Pareja (adrian@pareja.com)
+ * @author Adrian Pareja (adrian@pareja.com)
  * @author Carlos G. Gavidia (cgavidia@acm.org)
  */
 public class SchedulingFrame extends javax.swing.JFrame {
@@ -20,9 +20,6 @@ public class SchedulingFrame extends javax.swing.JFrame {
   private double solutionMakespan;
   private double[][] problemGraph;
 
-  /**
-   * Creates new form SchedulingFrame
-   */
   public SchedulingFrame() {
     initComponents();
   }
