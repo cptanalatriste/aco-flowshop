@@ -6,7 +6,7 @@ import isula.aco.algorithms.acs.PseudoRandomNodeSelection;
 import isula.aco.algorithms.maxmin.StartPheromoneMatrixForMaxMin;
 import isula.aco.algorithms.maxmin.UpdatePheromoneMatrixForMaxMin;
 import isula.aco.problems.flowshop.FlowShopProblemSolver;
-import isula.aco.problems.flowshop.LocalSearchPolicy;
+import isula.aco.problems.flowshop.ApplyLocalSearch;
 import pe.edu.pucp.ia.aco.config.ProblemConfiguration;
 import pe.edu.pucp.ia.aco.view.SchedulingFrame;
 
@@ -62,7 +62,7 @@ public class AcoFlowShopWithIsula {
       List<Ant<Integer>> hive = problemSolver.getAntColony().getHive();
       for (Ant<Integer> ant : hive) {
         ant.addPolicy(new PseudoRandomNodeSelection<Integer>());
-        ant.addPolicy(new LocalSearchPolicy());
+        ant.addPolicy(new ApplyLocalSearch());
       }
 
       problemSolver.solveProblem();
