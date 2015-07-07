@@ -52,6 +52,7 @@ public class AcoFlowShopWithIsula {
 
       ProblemConfiguration configurationProvider = new ProblemConfiguration();
       problemSolver = new FlowShopProblemSolver(graph, configurationProvider);
+      configurationProvider.setEnvironment(problemSolver.getEnvironment());
 
       problemSolver
           .addDaemonAction(new StartPheromoneMatrixForMaxMin<Integer>());
