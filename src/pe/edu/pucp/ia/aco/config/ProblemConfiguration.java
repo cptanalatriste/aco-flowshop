@@ -16,16 +16,17 @@ public class ProblemConfiguration implements MaxMinConfigurationProvider,
 
   private static final String FILE_NAME = "flowshop_75x20.data";
   private static final String FILE_FOLDER = 
-      "C:/Users/CarlosG/Documents/GitHub/ACOFlowShopWithIsula/src/";
+      "C:/Users/V144615/Documents/GitHub/ACOFlowShopWithIsula/src/";
 
   public static final String FILE_DATASET = FILE_FOLDER + FILE_NAME;
+  public static final int Q = 1;
+
 
   private static final int NUMBER_OF_ANTS = 1;
   private static final int VERY_IMPORTANT = 1;
   private static final int NOT_IMPORTANT = 0;
 
   private static final double EVAPORATION = 0.5;
-  private static final int Q = 1;
   private static final double MAXIMUM_PHEROMONE = 1.0;
   private static final int MAX_ITERATIONS = 20000;
 
