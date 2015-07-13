@@ -1,7 +1,6 @@
 package pe.edu.pucp.ia.aco;
 
 import isula.aco.AcoProblemSolver;
-import isula.aco.Ant;
 import isula.aco.algorithms.acs.PseudoRandomNodeSelection;
 import isula.aco.algorithms.maxmin.StartPheromoneMatrixForMaxMin;
 import isula.aco.problems.flowshop.ApplyLocalSearch;
@@ -15,10 +14,10 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.logging.Logger;
 
 import javax.swing.UnsupportedLookAndFeelException;
+
 
 /**
  * Appies the MAX-MIN Ant System algorithm to Flow-Shop Problem instance.
@@ -37,6 +36,7 @@ public class AcoFlowShopWithIsula {
    * @param args
    *          Arguments for the application.
    */
+  @SuppressWarnings("unchecked")
   public static void main(String... args) {
     logger.info("ACO FOR FLOW SHOP SCHEDULLING");
     logger.info("=============================");
@@ -55,15 +55,11 @@ public class AcoFlowShopWithIsula {
       problemSolver = new FlowShopProblemSolver(graph, configurationProvider);
       configurationProvider.setEnvironment(problemSolver.getEnvironment());
 
-      problemSolver
-          .addDaemonAction(new StartPheromoneMatrixForMaxMin<Integer>());
-      problemSolver.addDaemonAction(new FlowShopUpdatePheromoneMatrix());
-
-      List<Ant<Integer>> hive = problemSolver.getAntColony().getHive();
-      for (Ant<Integer> ant : hive) {
-        ant.addPolicy(new PseudoRandomNodeSelection<Integer>());
-        ant.addPolicy(new ApplyLocalSearch());
-      }
+      problemSolver.addDaemonActions(
+          new StartPheromoneMatrixForMaxMin<Integer>(),
+          new FlowShopUpdatePheromoneMatrix());
+      problemSolver.getAntColony().addAntPolicies(
+          new PseudoRandomNodeSelection<Integer>(), new ApplyLocalSearch());
 
       problemSolver.solveProblem();
       showSolution(graph, problemSolver);
