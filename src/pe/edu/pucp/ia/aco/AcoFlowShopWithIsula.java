@@ -3,10 +3,9 @@ package pe.edu.pucp.ia.aco;
 import isula.aco.AcoProblemSolver;
 import isula.aco.algorithms.acs.PseudoRandomNodeSelection;
 import isula.aco.algorithms.maxmin.StartPheromoneMatrixForMaxMin;
-import isula.aco.problems.flowshop.ApplyLocalSearch;
-import isula.aco.problems.flowshop.FlowShopProblemSolver;
-
 import pe.edu.pucp.ia.aco.config.ProblemConfiguration;
+import pe.edu.pucp.ia.aco.isula.ApplyLocalSearch;
+import pe.edu.pucp.ia.aco.isula.FlowShopProblemSolver;
 import pe.edu.pucp.ia.aco.isula.FlowShopUpdatePheromoneMatrix;
 import pe.edu.pucp.ia.aco.view.SchedulingFrame;
 
