@@ -6,11 +6,12 @@ import isula.aco.algorithms.maxmin.UpdatePheromoneMatrixForMaxMin;
 import pe.edu.pucp.ia.aco.config.ProblemConfiguration;
 
 public class FlowShopUpdatePheromoneMatrix extends
-    UpdatePheromoneMatrixForMaxMin<Integer> {
+    UpdatePheromoneMatrixForMaxMin<Integer, FlowShopEnvironment> {
 
   @Override
-  protected double getNewPheromoneValue(Ant<Integer> bestAnt,
-      int positionInSolution, Integer solutionComponent,
+  protected double getNewPheromoneValue(
+      Ant<Integer, FlowShopEnvironment> bestAnt, int positionInSolution,
+      Integer solutionComponent,
       MaxMinConfigurationProvider configurationProvider) {
 
     double contribution = ProblemConfiguration.Q

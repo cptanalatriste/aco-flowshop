@@ -5,6 +5,7 @@ import isula.aco.algorithms.acs.PseudoRandomNodeSelection;
 import isula.aco.algorithms.maxmin.StartPheromoneMatrixForMaxMin;
 import pe.edu.pucp.ia.aco.config.ProblemConfiguration;
 import pe.edu.pucp.ia.aco.isula.ApplyLocalSearch;
+import pe.edu.pucp.ia.aco.isula.FlowShopEnvironment;
 import pe.edu.pucp.ia.aco.isula.FlowShopProblemSolver;
 import pe.edu.pucp.ia.aco.isula.FlowShopUpdatePheromoneMatrix;
 import pe.edu.pucp.ia.aco.view.SchedulingFrame;
@@ -16,7 +17,6 @@ import java.util.LinkedList;
 import java.util.logging.Logger;
 
 import javax.swing.UnsupportedLookAndFeelException;
-
 
 /**
  * Appies the MAX-MIN Ant System algorithm to Flow-Shop Problem instance.
@@ -55,10 +55,11 @@ public class AcoFlowShopWithIsula {
       configurationProvider.setEnvironment(problemSolver.getEnvironment());
 
       problemSolver.addDaemonActions(
-          new StartPheromoneMatrixForMaxMin<Integer>(),
+          new StartPheromoneMatrixForMaxMin<Integer, FlowShopEnvironment>(),
           new FlowShopUpdatePheromoneMatrix());
       problemSolver.getAntColony().addAntPolicies(
-          new PseudoRandomNodeSelection<Integer>(), new ApplyLocalSearch());
+          new PseudoRandomNodeSelection<Integer, FlowShopEnvironment>(),
+          new ApplyLocalSearch());
 
       problemSolver.solveProblem();
       showSolution(graph, problemSolver);
@@ -68,7 +69,7 @@ public class AcoFlowShopWithIsula {
   }
 
   private static void showSolution(final double[][] graph,
-      final AcoProblemSolver<Integer> problemSolver)
+      final AcoProblemSolver<Integer, FlowShopEnvironment> problemSolver)
       throws ClassNotFoundException, InstantiationException,
       IllegalAccessException, UnsupportedLookAndFeelException {
     for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager

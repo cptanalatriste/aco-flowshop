@@ -2,9 +2,8 @@ package pe.edu.pucp.ia.aco.isula;
 
 import isula.aco.Ant;
 import isula.aco.AntColony;
-import isula.aco.Environment;
 
-public class FlowShopAntColony extends AntColony<Integer> {
+public class FlowShopAntColony extends AntColony<Integer, FlowShopEnvironment> {
 
   private int numberOfJobs;
 
@@ -23,7 +22,8 @@ public class FlowShopAntColony extends AntColony<Integer> {
   }
 
   @Override
-  protected Ant<Integer> createAnt(Environment environment) {
+  protected Ant<Integer, FlowShopEnvironment> createAnt(
+      FlowShopEnvironment environment) {
     AntForFlowShop ant = new AntForFlowShop(numberOfJobs);
     return ant;
   }

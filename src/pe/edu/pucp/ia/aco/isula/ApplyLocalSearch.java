@@ -3,14 +3,13 @@ package pe.edu.pucp.ia.aco.isula;
 import isula.aco.AntPolicy;
 import isula.aco.AntPolicyType;
 import isula.aco.ConfigurationProvider;
-import isula.aco.Environment;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ApplyLocalSearch extends AntPolicy<Integer> {
+public class ApplyLocalSearch extends AntPolicy<Integer, FlowShopEnvironment> {
 
   private static Logger logger = Logger.getLogger(ApplyLocalSearch.class
       .getName());
@@ -20,9 +19,9 @@ public class ApplyLocalSearch extends AntPolicy<Integer> {
   }
 
   @Override
-  public void applyPolicy(Environment environment,
+  public void applyPolicy(FlowShopEnvironment environment,
       ConfigurationProvider configuration) {
-    
+
     logger.log(Level.FINE, "Original Solution > Quality: "
         + getAnt().getSolutionQuality(environment) + ", Solution: "
         + getAnt().getSolutionAsString());

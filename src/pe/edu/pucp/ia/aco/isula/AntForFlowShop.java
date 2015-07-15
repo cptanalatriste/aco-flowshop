@@ -1,7 +1,6 @@
 package pe.edu.pucp.ia.aco.isula;
 
 import isula.aco.Ant;
-import isula.aco.Environment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +11,7 @@ import java.util.List;
  * @author Carlos G. Gavidia (cgavidia@acm.org)
  * @author Adrian Pareja (adrian@pareja.com)
  */
-public class AntForFlowShop extends Ant<Integer> {
+public class AntForFlowShop extends Ant<Integer, FlowShopEnvironment> {
 
   private static final double VALUE_NOT_USED = 1.0;
 
@@ -31,9 +30,8 @@ public class AntForFlowShop extends Ant<Integer> {
   }
 
   @Override
-  public boolean isSolutionReady(Environment environment) {
-    FlowShopEnvironment flowShopEnvironment = (FlowShopEnvironment) environment;
-    return getCurrentIndex() == flowShopEnvironment.getNumberOfJobs();
+  public boolean isSolutionReady(FlowShopEnvironment environment) {
+    return getCurrentIndex() == environment.getNumberOfJobs();
   }
 
   /**
@@ -44,18 +42,18 @@ public class AntForFlowShop extends Ant<Integer> {
    * @return Makespan of the solution.
    */
   @Override
-  public double getSolutionQuality(Environment environment) {
+  public double getSolutionQuality(FlowShopEnvironment environment) {
     return getScheduleMakespan(getSolution(), environment.getProblemGraph());
   }
 
   @Override
   public Double getHeuristicValue(Integer solutionComponent,
-      Integer positionInSolution, Environment environment) {
+      Integer positionInSolution, FlowShopEnvironment environment) {
     return VALUE_NOT_USED;
   }
 
   @Override
-  public List<Integer> getNeighbourhood(Environment environment) {
+  public List<Integer> getNeighbourhood(FlowShopEnvironment environment) {
     List<Integer> neighbours = new ArrayList<Integer>();
     double[][] pheromoneMatrix = environment.getPheromoneMatrix();
 
@@ -67,7 +65,7 @@ public class AntForFlowShop extends Ant<Integer> {
 
   @Override
   public Double getPheromoneTrailValue(Integer solutionComponent,
-      Integer positionInSolution, Environment environment) {
+      Integer positionInSolution, FlowShopEnvironment environment) {
 
     double[][] pheromoneMatrix = environment.getPheromoneMatrix();
     return pheromoneMatrix[solutionComponent][positionInSolution];
@@ -75,7 +73,7 @@ public class AntForFlowShop extends Ant<Integer> {
 
   @Override
   public void setPheromoneTrailValue(Integer solutionComponent,
-      Environment environment, Double value) {
+      FlowShopEnvironment environment, Double value) {
     double[][] pheromoneMatrix = environment.getPheromoneMatrix();
 
     pheromoneMatrix[solutionComponent][solutionComponent] = value;
