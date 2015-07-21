@@ -14,9 +14,9 @@ import isula.aco.exception.ConfigurationException;
 public class ProblemConfiguration implements MaxMinConfigurationProvider,
     AcsConfigurationProvider {
 
-  private static final String FILE_NAME = "flowshop_75x20.data";
+  private static final String FILE_NAME = "flowshop_default.data";
   private static final String FILE_FOLDER = 
-      "C:/Users/V144615/Documents/GitHub/ACOFlowShopWithIsula/src/";
+      "C:/Users/CarlosG/Documents/GitHub/ACOFlowShopWithIsula/src/";
 
   public static final String FILE_DATASET = FILE_FOLDER + FILE_NAME;
   public static final int Q = 1;
