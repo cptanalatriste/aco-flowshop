@@ -3,6 +3,7 @@ package pe.edu.pucp.ia.aco.isula;
 import isula.aco.Ant;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -26,7 +27,7 @@ public class AntForFlowShop extends Ant<Integer, FlowShopEnvironment> {
   public AntForFlowShop(int graphLenght) {
     super();
     this.setSolution(new Integer[graphLenght]);
-    this.setVisited(new ArrayList<Integer>());
+    this.setVisited(new HashMap<Integer, Boolean>());
   }
 
   @Override
