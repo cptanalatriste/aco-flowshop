@@ -83,7 +83,7 @@ public class AcoFlowShopWithIsula {
     java.awt.EventQueue.invokeLater(new Runnable() {
       public void run() {
         SchedulingFrame frame = new SchedulingFrame();
-        frame.setSolutionMakespan(problemSolver.getBestSolutionQuality());
+        frame.setSolutionMakespan(problemSolver.getBestSolutionCost());
 
         frame.setProblemGraph(graph);
         frame.setSolution(problemSolver.getBestSolution());

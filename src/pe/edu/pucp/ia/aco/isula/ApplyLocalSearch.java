@@ -22,14 +22,14 @@ public class ApplyLocalSearch extends AntPolicy<Integer, FlowShopEnvironment> {
   public void applyPolicy(FlowShopEnvironment environment,
       ConfigurationProvider configuration) {
 
-    logger.log(Level.FINE, "Original Solution > Quality: "
-        + getAnt().getSolutionQuality(environment) + ", Solution: "
+    logger.log(Level.FINE, "Original Solution > Cost: "
+        + getAnt().getSolutionCost(environment) + ", Solution: "
         + getAnt().getSolutionAsString());
 
     // TODO(cgavidia): This needs a HUGE REFACTOR!
 
     AntForFlowShop antForFlowShop = (pe.edu.pucp.ia.aco.isula.AntForFlowShop) getAnt();
-    double makespan = getAnt().getSolutionQuality(environment);
+    double makespan = getAnt().getSolutionCost(environment);
     Integer[] currentSolution = getAnt().getSolution();
     Integer[] localSolutionJobs = new Integer[currentSolution.length];
 

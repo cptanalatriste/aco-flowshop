@@ -15,7 +15,7 @@ public class FlowShopUpdatePheromoneMatrix extends
       MaxMinConfigurationProvider configurationProvider) {
 
     double contribution = ProblemConfiguration.Q
-        / bestAnt.getSolutionQuality(getEnvironment());
+        / bestAnt.getSolutionCost(getEnvironment());
 
     double newValue = bestAnt.getPheromoneTrailValue(solutionComponent,
         positionInSolution, getEnvironment()) + contribution;
