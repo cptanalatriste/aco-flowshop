@@ -19,7 +19,7 @@ public class ApplyLocalSearch extends AntPolicy<Integer, FlowShopEnvironment> {
   }
 
   @Override
-  public void applyPolicy(FlowShopEnvironment environment,
+  public boolean applyPolicy(FlowShopEnvironment environment,
       ConfigurationProvider configuration) {
 
     logger.log(Level.FINE, "Original Solution > Cost: "
@@ -85,6 +85,8 @@ public class ApplyLocalSearch extends AntPolicy<Integer, FlowShopEnvironment> {
       index++;
     }
     getAnt().setSolution(localSolutionJobs);
+    
+    return true;
   }
 
 }
