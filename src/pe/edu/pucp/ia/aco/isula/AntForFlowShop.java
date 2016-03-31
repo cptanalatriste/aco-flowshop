@@ -73,11 +73,11 @@ public class AntForFlowShop extends Ant<Integer, FlowShopEnvironment> {
   }
 
   @Override
-  public void setPheromoneTrailValue(Integer solutionComponent,
+  public void setPheromoneTrailValue(Integer solutionComponent,Integer positionInSolution, 
       FlowShopEnvironment environment, Double value) {
     double[][] pheromoneMatrix = environment.getPheromoneMatrix();
 
-    pheromoneMatrix[solutionComponent][solutionComponent] = value;
+    pheromoneMatrix[solutionComponent][positionInSolution] = value;
   }
 
   /**
