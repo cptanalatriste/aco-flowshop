@@ -53,10 +53,8 @@ public class AntForFlowShop extends Ant<Integer, FlowShopEnvironment> {
 
     @Override
     public List<Integer> getNeighbourhood(FlowShopEnvironment environment) {
-        List<Integer> neighbours = new ArrayList<Integer>();
-        double[][] pheromoneMatrix = environment.getPheromoneMatrix();
-
-        for (int l = 0; l < pheromoneMatrix.length; l++) {
+        List<Integer> neighbours = new ArrayList<>();
+        for (int l = 0; l < environment.getNumberOfJobs(); l++) {
             neighbours.add(l);
         }
         return neighbours;
@@ -85,7 +83,7 @@ public class AntForFlowShop extends Ant<Integer, FlowShopEnvironment> {
      * @param jobInfo  Job Info.
      * @return Makespan.
      */
-    public double getScheduleMakespan(Integer[] schedule, double[][] jobInfo) {
+    public static double getScheduleMakespan(Integer[] schedule, double[][] jobInfo) {
         int machines = jobInfo[0].length;
         double[] machinesTime = new double[machines];
         double tiempo = 0;
