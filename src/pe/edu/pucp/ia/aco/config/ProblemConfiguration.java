@@ -4,7 +4,7 @@ import isula.aco.Environment;
 import isula.aco.algorithms.acs.AcsConfigurationProvider;
 import isula.aco.algorithms.maxmin.MaxMinConfigurationProvider;
 import isula.aco.exception.ConfigurationException;
-import pe.edu.pucp.ia.aco.isula.AntForFlowShop;
+import isula.aco.flowshop.AntForFlowShop;
 
 import java.util.ArrayList;
 import java.util.Collections;

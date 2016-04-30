@@ -1,25 +1,27 @@
 package pe.edu.pucp.ia.aco;
 
 import isula.aco.AcoProblemSolver;
+import isula.aco.Ant;
+import isula.aco.AntColony;
 import isula.aco.algorithms.acs.PseudoRandomNodeSelection;
 import isula.aco.algorithms.antsystem.StartPheromoneMatrix;
-import isula.aco.algorithms.maxmin.StartPheromoneMatrixForMaxMin;
+import isula.aco.flowshop.AntForFlowShop;
+import isula.aco.flowshop.ApplyLocalSearch;
+import isula.aco.flowshop.FlowShopEnvironment;
+import isula.aco.flowshop.FlowShopUpdatePheromoneMatrix;
 import pe.edu.pucp.ia.aco.config.ProblemConfiguration;
-import pe.edu.pucp.ia.aco.isula.*;
 import pe.edu.pucp.ia.aco.view.SchedulingFrame;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.logging.Logger;
 
 import javax.swing.UnsupportedLookAndFeelException;
 
 /**
- * Appies the MAX-MIN Ant System algorithm to Flow-Shop Problem instance.
+ * Applies the MAX-MIN Ant System algorithm to Flow-Shop Problem instance.
  *
  * @author Carlos G. Gavidia (cgavidia@acm.org)
  * @author Adrian Pareja (adrian@pareja.com)
@@ -42,30 +44,40 @@ public class AcoFlowShopWithIsula {
         try {
             String fileDataset = ProblemConfiguration.FILE_DATASET;
 
-            // TODO(cgavidia): Maybe an interface here or an utility, to produce graph from files.
-//            double[][] graph = getProblemGraphFromFile(fileDataset);
             double[][] problemRepresentation = getTaillardProblemFromFile(fileDataset, 20, 5);
             logger.info("Data file: " + fileDataset);
 
-            FlowShopProblemSolver problemSolver;
-
             ProblemConfiguration configurationProvider = new ProblemConfiguration(problemRepresentation);
-            problemSolver = new FlowShopProblemSolver(problemRepresentation, configurationProvider);
-            configurationProvider.setEnvironment(problemSolver.getEnvironment());
+            AntColony<Integer, FlowShopEnvironment> colony = getAntColony(configurationProvider);
+            FlowShopEnvironment environment = new FlowShopEnvironment(problemRepresentation);
+            configurationProvider.setEnvironment(environment);
 
-            problemSolver.addDaemonActions(
+            AcoProblemSolver<Integer, FlowShopEnvironment> solver = new AcoProblemSolver<>();
+            solver.initialize(environment, colony, configurationProvider);
+
+            solver.addDaemonActions(
                     new StartPheromoneMatrix<Integer, FlowShopEnvironment>(),
                     new FlowShopUpdatePheromoneMatrix());
-            problemSolver.getAntColony().addAntPolicies(
+            solver.getAntColony().addAntPolicies(
                     new PseudoRandomNodeSelection<Integer, FlowShopEnvironment>(),
                     new ApplyLocalSearch());
 
-            problemSolver.solveProblem();
-            showSolution(problemRepresentation, problemSolver);
+            solver.solveProblem();
+            showSolution(problemRepresentation, solver);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private static AntColony<Integer, FlowShopEnvironment> getAntColony(ProblemConfiguration configurationProvider) {
+        return new AntColony<Integer, FlowShopEnvironment>(configurationProvider.getNumberOfAnts()) {
+            @Override
+            protected Ant<Integer, FlowShopEnvironment> createAnt(FlowShopEnvironment environment) {
+                AntForFlowShop ant = new AntForFlowShop(environment.getNumberOfJobs());
+                return ant;
+            }
+        };
     }
 
     private static void showSolution(final double[][] graph,
