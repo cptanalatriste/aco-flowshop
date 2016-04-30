@@ -93,6 +93,17 @@ public class AcoFlowShopWithIsula {
         });
     }
 
+
+    /**
+     * Reads a scheduling instance in the format used in Taillard's benchmarks
+     * (http://mistic.heig-vd.ch/taillard/problemes.dir/ordonnancement.dir/ordonnancement.html)
+     *
+     * @param fileName         File name
+     * @param numberOfJobs     Jobs to consider.
+     * @param numberOfMachines Machines available.
+     * @return Matrix representation of the problem.
+     * @throws IOException
+     */
     public static double[][] getTaillardProblemFromFile(String fileName, int numberOfJobs,
                                                         int numberOfMachines) throws IOException {
 
