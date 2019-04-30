@@ -28,16 +28,16 @@ public class FlowShopEnvironment extends Environment {
     }
 
     public int getNumberOfJobs() {
-        return getProblemGraph().length;
+        return getProblemRepresentation().length;
     }
 
     @Override
-    protected boolean isProblemGraphValid() {
-        int numberOfMachines = getProblemGraph()[0].length;
+    protected boolean isProblemRepresentationValid() {
+        int numberOfMachines = getProblemRepresentation()[0].length;
         int jobs = getNumberOfJobs();
 
         for (int i = 1; i < jobs; i++) {
-            if (getProblemGraph()[i].length != numberOfMachines) {
+            if (getProblemRepresentation()[i].length != numberOfMachines) {
                 return false;
             }
         }

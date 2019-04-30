@@ -101,7 +101,7 @@ public class ProblemConfiguration implements MaxMinConfigurationProvider,
      * This method of calculation is included in the paper.
      */
     public double getBestChoiceProbability() {
-        double[][] problemGraph = this.environment.getProblemGraph();
+        double[][] problemGraph = this.environment.getProblemRepresentation();
         double bestChoiceProbability = (problemGraph.length - this
                 .getBestChoiceConstant()) / problemGraph.length;
         return bestChoiceProbability;

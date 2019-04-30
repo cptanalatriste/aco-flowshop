@@ -39,7 +39,7 @@ public class AntForFlowShop extends Ant<Integer, FlowShopEnvironment> {
      */
     @Override
     public double getSolutionCost(FlowShopEnvironment environment) {
-        return getScheduleMakespan(getSolution(), environment.getProblemGraph());
+        return getScheduleMakespan(getSolution(), environment.getProblemRepresentation());
     }
 
     @Override

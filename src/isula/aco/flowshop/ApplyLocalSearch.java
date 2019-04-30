@@ -61,7 +61,7 @@ public class ApplyLocalSearch extends AntPolicy<Integer, FlowShopEnvironment> {
                 }
 
                 double newMakespan = antForFlowShop.getScheduleMakespan(
-                        intermediateSolution, environment.getProblemGraph());
+                        intermediateSolution, environment.getProblemRepresentation());
 
                 if (newMakespan < makespan) {
                     makespan = newMakespan;
