@@ -22,10 +22,7 @@ public class ProblemConfiguration implements MaxMinConfigurationProvider,
     //  private static final String FILE_NAME = "flowshop_default.data";
     private static final String FILE_NAME = "ta001.data";
 
-    private static final String FILE_FOLDER =
-            "C:/Users/Carlos G. Gavidia/git/aco-flowshop/src/";
-
-    public static final String FILE_DATASET = FILE_FOLDER + FILE_NAME;
+    public static final String FILE_DATASET = FILE_NAME;
     public static final int Q = 1;
 
 

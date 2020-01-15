@@ -13,6 +13,7 @@ import pe.edu.pucp.ia.aco.config.ProblemConfiguration;
 import pe.edu.pucp.ia.aco.view.SchedulingFrame;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -121,7 +122,10 @@ public class AcoFlowShopWithIsula {
 
         double[][] problemRepresentation = new double[numberOfJobs][numberOfMachines];
         int currentMachine = 0;
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+
+        File file = new File(AcoFlowShopWithIsula.class.getClassLoader().getResource(fileName).getFile());
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line = null;
             while ((line = reader.readLine()) != null) {
                 String[] tokens = line.trim().split(" ");
