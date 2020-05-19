@@ -1,5 +1,5 @@
 # aco-flowshop
-A Java Program to solve the Flow-Shop Scheduling Problem using Ant Colony Algorithms. The implemented method is based on the paper "An ant approach to the flow shop problem" by Thomas Stutzle.
+A Java Program to solve the Flow-Shop Scheduling Problem using Ant Colony Algorithms. The implemented method is based on the paper ["An ant approach to the flow shop problem" by Thomas Stutzle](https://www.researchgate.net/publication/2593620_An_Ant_Approach_to_the_Flow_Shop_Problem).
 
 The Ant-Colony Algorithm
 ------------------------
