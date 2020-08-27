@@ -1,10 +1,10 @@
 package pe.edu.pucp.ia.aco.config;
 
-import isula.aco.Environment;
 import isula.aco.algorithms.acs.AcsConfigurationProvider;
 import isula.aco.algorithms.maxmin.MaxMinConfigurationProvider;
 import isula.aco.exception.ConfigurationException;
 import isula.aco.flowshop.AntForFlowShop;
+import isula.aco.flowshop.FlowShopEnvironment;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,15 +26,15 @@ public class ProblemConfiguration implements MaxMinConfigurationProvider,
     public static final int Q = 1;
 
 
-    private static final int NUMBER_OF_ANTS = 1;
+    private static final int NUMBER_OF_ANTS = 1 * 10;
     private static final int VERY_IMPORTANT = 1;
     private static final int NOT_IMPORTANT = 0;
 
     private static final double EVAPORATION = 0.75;
     private static final int MAX_ITERATIONS = 20000;
 
-    private Environment environment;
-    private double initialPheromone = 1.0;
+    private FlowShopEnvironment environment;
+    private double initialPheromone;
 
     public ProblemConfiguration(double[][] problemRepresentation) {
         List<Integer> randomSolution = new ArrayList<>();
@@ -44,18 +44,13 @@ public class ProblemConfiguration implements MaxMinConfigurationProvider,
         }
 
         Collections.shuffle(randomSolution);
-        double randomQuality = AntForFlowShop.getScheduleMakespan(
-                randomSolution.toArray(new Integer[randomSolution.size()]),
-                problemRepresentation);
+        double randomQuality = AntForFlowShop.getScheduleMakespan(randomSolution, problemRepresentation);
 
         this.initialPheromone = 1 / (1 - EVAPORATION) / randomQuality;
     }
 
-    public Environment getEnvironment() {
-        return environment;
-    }
 
-    public void setEnvironment(Environment environment) {
+    public void setEnvironment(FlowShopEnvironment environment) {
         this.environment = environment;
     }
 
@@ -63,8 +58,13 @@ public class ProblemConfiguration implements MaxMinConfigurationProvider,
         return NUMBER_OF_ANTS;
     }
 
-
+    @Override
     public double getEvaporationRatio() {
+        return EVAPORATION;
+    }
+
+    @Override
+    public double getPheromoneDecayCoefficient() {
         return EVAPORATION;
     }
 
@@ -76,10 +76,6 @@ public class ProblemConfiguration implements MaxMinConfigurationProvider,
     public double getMinimumPheromoneValue() {
         throw new ConfigurationException(
                 "We don't use this parameter in this version of the Algorithm");
-    }
-
-    public double getQValue() {
-        return Q;
     }
 
     public int getBestChoiceConstant() {
@@ -99,10 +95,10 @@ public class ProblemConfiguration implements MaxMinConfigurationProvider,
      */
     public double getBestChoiceProbability() {
         double[][] problemGraph = this.environment.getProblemRepresentation();
-        double bestChoiceProbability = (problemGraph.length - this
-                .getBestChoiceConstant()) / problemGraph.length;
-        return bestChoiceProbability;
+        return (problemGraph.length - this
+                .getBestChoiceConstant()) / (float) problemGraph.length;
     }
+
 
     public double getHeuristicImportance() {
         return NOT_IMPORTANT;

@@ -12,14 +12,13 @@ import isula.aco.flowshop.FlowShopUpdatePheromoneMatrix;
 import pe.edu.pucp.ia.aco.config.ProblemConfiguration;
 import pe.edu.pucp.ia.aco.view.SchedulingFrame;
 
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.Objects;
 import java.util.logging.Logger;
-
-import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  * Applies the MAX-MIN Ant System algorithm to Flow-Shop Problem instance.
@@ -37,7 +36,6 @@ public class AcoFlowShopWithIsula {
      *
      * @param args Arguments for the application.
      */
-    @SuppressWarnings("unchecked")
     public static void main(String... args) {
         logger.info("ACO FOR FLOW SHOP SCHEDULLING");
         logger.info("=============================");
@@ -57,10 +55,10 @@ public class AcoFlowShopWithIsula {
             solver.initialize(environment, colony, configurationProvider);
 
             solver.addDaemonActions(
-                    new StartPheromoneMatrix<Integer, FlowShopEnvironment>(),
+                    new StartPheromoneMatrix<>(),
                     new FlowShopUpdatePheromoneMatrix());
             solver.getAntColony().addAntPolicies(
-                    new PseudoRandomNodeSelection<Integer, FlowShopEnvironment>(),
+                    new PseudoRandomNodeSelection<>(),
                     new ApplyLocalSearch());
 
             solver.solveProblem();
@@ -75,8 +73,7 @@ public class AcoFlowShopWithIsula {
         return new AntColony<Integer, FlowShopEnvironment>(configurationProvider.getNumberOfAnts()) {
             @Override
             protected Ant<Integer, FlowShopEnvironment> createAnt(FlowShopEnvironment environment) {
-                AntForFlowShop ant = new AntForFlowShop(environment.getNumberOfJobs());
-                return ant;
+                return new AntForFlowShop();
             }
         };
     }
@@ -93,16 +90,15 @@ public class AcoFlowShopWithIsula {
             }
         }
 
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                SchedulingFrame frame = new SchedulingFrame();
-                frame.setSolutionMakespan(problemSolver.getBestSolutionCost());
+        java.awt.EventQueue.invokeLater(() -> {
+            SchedulingFrame frame = new SchedulingFrame();
+            frame.setSolutionMakespan(problemSolver.getBestSolutionCost());
 
-                frame.setProblemGraph(graph);
-                frame.setSolution(problemSolver.getBestSolution());
-                frame.setVisible(true);
+            frame.setProblemGraph(graph);
+            frame.setSolution(problemSolver.getBestSolution().toArray(
+                    new Integer[0]));
+            frame.setVisible(true);
 
-            }
         });
     }
 
@@ -115,7 +111,6 @@ public class AcoFlowShopWithIsula {
      * @param numberOfJobs     Jobs to consider.
      * @param numberOfMachines Machines available.
      * @return Matrix representation of the problem.
-     * @throws IOException
      */
     public static double[][] getTaillardProblemFromFile(String fileName, int numberOfJobs,
                                                         int numberOfMachines) throws IOException {
@@ -123,10 +118,10 @@ public class AcoFlowShopWithIsula {
         double[][] problemRepresentation = new double[numberOfJobs][numberOfMachines];
         int currentMachine = 0;
 
-        File file = new File(AcoFlowShopWithIsula.class.getClassLoader().getResource(fileName).getFile());
+        File file = new File(Objects.requireNonNull(AcoFlowShopWithIsula.class.getClassLoader().getResource(fileName)).getFile());
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String line = null;
+            String line;
             while ((line = reader.readLine()) != null) {
                 String[] tokens = line.trim().split(" ");
 
@@ -141,53 +136,4 @@ public class AcoFlowShopWithIsula {
         return problemRepresentation;
     }
 
-    /**
-     * Reads a text file and returns a problem matrix.
-     *
-     * @param path File to read.
-     * @return Problem matrix.
-     * @throws IOException If an error produces while reading the file.
-     */
-    public static double[][] getProblemGraphFromFile(String path)
-            throws IOException {
-        double[][] graph = null;
-        FileReader fr = new FileReader(path);
-        BufferedReader buf = new BufferedReader(fr);
-        String line;
-        int index = 0;
-
-        while ((line = buf.readLine()) != null) {
-            if (index > 0) {
-                String[] splitA = line.split(" ");
-                LinkedList<String> split = new LinkedList<>();
-                for (String s : splitA) {
-                    if (!s.isEmpty()) {
-                        split.add(s);
-                    }
-                }
-                int column = 0;
-                for (String anString : split) {
-                    if (!anString.isEmpty()) {
-                        graph[index - 1][column++] = Integer.parseInt(anString);
-                    }
-                }
-            } else {
-                String[] firstLine = line.split(" ");
-                String numberOfJobs = firstLine[0];
-                String numberOfMachines = firstLine[1];
-
-                logger.info("numberOfJobs=" + numberOfJobs + ", numberOfMachines="
-                        + numberOfMachines);
-
-                if (graph == null) {
-                    graph = new double[Integer.parseInt(numberOfJobs)][Integer
-                            .parseInt(numberOfMachines)];
-                }
-            }
-            index++;
-        }
-
-        buf.close();
-        return graph;
-    }
 }

@@ -11,6 +11,8 @@ public class FlowShopEnvironment extends Environment {
     private static Logger logger = Logger.getLogger(FlowShopEnvironment.class
             .getName());
 
+    private double[][] problemRepresentation;
+
     private int numberOfJobs;
 
     /**
@@ -19,9 +21,16 @@ public class FlowShopEnvironment extends Environment {
      * @param problemGraph Graph representation of the problem.
      * @throws InvalidInputException When the graph is incorrectly formed.
      */
-    public FlowShopEnvironment(double[][] problemGraph)
-            throws InvalidInputException {
-        super(problemGraph);
+    public FlowShopEnvironment(double[][] problemGraph) throws InvalidInputException {
+        super();
+
+        if (this.isProblemRepresentationValid(problemGraph)) {
+            this.problemRepresentation = problemGraph;
+            this.setPheromoneMatrix(createPheromoneMatrix());
+        } else {
+            throw new InvalidInputException();
+        }
+
         this.numberOfJobs = problemGraph.length;
 
         logger.info("Number of Jobs: " + numberOfJobs);
@@ -31,13 +40,12 @@ public class FlowShopEnvironment extends Environment {
         return getProblemRepresentation().length;
     }
 
-    @Override
-    protected boolean isProblemRepresentationValid() {
-        int numberOfMachines = getProblemRepresentation()[0].length;
-        int jobs = getNumberOfJobs();
+    protected boolean isProblemRepresentationValid(double[][] problemRepresentation) {
+        int numberOfMachines = problemRepresentation[0].length;
+        int jobs = problemRepresentation.length;
 
         for (int i = 1; i < jobs; i++) {
-            if (getProblemRepresentation()[i].length != numberOfMachines) {
+            if (problemRepresentation[i].length != numberOfMachines) {
                 return false;
             }
         }
@@ -49,9 +57,16 @@ public class FlowShopEnvironment extends Environment {
     @Override
     protected double[][] createPheromoneMatrix()
             throws MethodNotImplementedException {
-        int jobs = getNumberOfJobs();
+        if (this.getProblemRepresentation() != null) {
+            int jobs = getNumberOfJobs();
+            return new double[jobs][jobs];
+        }
 
-        return new double[jobs][jobs];
+        return null;
+
     }
 
+    public double[][] getProblemRepresentation() {
+        return problemRepresentation;
+    }
 }

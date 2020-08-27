@@ -18,13 +18,11 @@ public class AntForFlowShop extends Ant<Integer, FlowShopEnvironment> {
 
     /**
      * Creates an Ant specialized in the Flow Shop Scheduling problem.
-     *
-     * @param graphLenght Number of rows of the Problem Graph.
      */
-    public AntForFlowShop(int graphLenght) {
+    public AntForFlowShop() {
         super();
-        this.setSolution(new Integer[graphLenght]);
-        this.setVisited(new HashMap<Integer, Boolean>());
+        this.setSolution(new ArrayList<>());
+        this.setVisited(new HashMap<>());
     }
 
     @Override
@@ -38,8 +36,8 @@ public class AntForFlowShop extends Ant<Integer, FlowShopEnvironment> {
      * @return Makespan of the solution.
      */
     @Override
-    public double getSolutionCost(FlowShopEnvironment environment) {
-        return getScheduleMakespan(getSolution(), environment.getProblemRepresentation());
+    public double getSolutionCost(FlowShopEnvironment environment, List<Integer> solution) {
+        return getScheduleMakespan(solution, environment.getProblemRepresentation());
     }
 
     @Override
@@ -80,21 +78,21 @@ public class AntForFlowShop extends Ant<Integer, FlowShopEnvironment> {
      * @param jobInfo  Job Info.
      * @return Makespan.
      */
-    public static double getScheduleMakespan(Integer[] schedule, double[][] jobInfo) {
+    public static double getScheduleMakespan(List<Integer> schedule, double[][] jobInfo) {
         int machines = jobInfo[0].length;
         double[] machinesTime = new double[machines];
-        double tiempo = 0;
+        double timeStep;
 
         for (Integer job : schedule) {
             for (int i = 0; i < machines; i++) {
-                tiempo = jobInfo[job][i];
+                timeStep = jobInfo[job][i];
                 if (i == 0) {
-                    machinesTime[i] = machinesTime[i] + tiempo;
+                    machinesTime[i] = machinesTime[i] + timeStep;
                 } else {
                     if (machinesTime[i] > machinesTime[i - 1]) {
-                        machinesTime[i] = machinesTime[i] + tiempo;
+                        machinesTime[i] = machinesTime[i] + timeStep;
                     } else {
-                        machinesTime[i] = machinesTime[i - 1] + tiempo;
+                        machinesTime[i] = machinesTime[i - 1] + timeStep;
                     }
                 }
             }

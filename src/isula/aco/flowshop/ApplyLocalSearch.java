@@ -5,6 +5,7 @@ import isula.aco.AntPolicyType;
 import isula.aco.ConfigurationProvider;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,10 +31,10 @@ public class ApplyLocalSearch extends AntPolicy<Integer, FlowShopEnvironment> {
 
         AntForFlowShop antForFlowShop = (AntForFlowShop) getAnt();
         double makespan = getAnt().getSolutionCost(environment);
-        Integer[] currentSolution = getAnt().getSolution();
-        Integer[] localSolutionJobs = new Integer[currentSolution.length];
+        List<Integer> currentSolution = getAnt().getSolution();
+        Integer[] localSolutionJobs = new Integer[currentSolution.size()];
 
-        List<Integer> jobsList = new ArrayList<Integer>();
+        List<Integer> jobsList = new ArrayList<>();
 
         for (int job : currentSolution) {
             jobsList.add(job);
@@ -44,15 +45,15 @@ public class ApplyLocalSearch extends AntPolicy<Integer, FlowShopEnvironment> {
         int indexI = 0;
         boolean lessMakespan = true;
 
-        while (indexI < (currentSolution.length) && lessMakespan) {
+        while (indexI < (currentSolution.size()) && lessMakespan) {
             int jobI = localSolution.get(indexI);
             localSolution.remove(indexI);
             int indexJ = 0;
 
-            while (indexJ < currentSolution.length && lessMakespan) {
+            while (indexJ < currentSolution.size() && lessMakespan) {
                 localSolution.add(indexJ, jobI);
 
-                Integer[] intermediateSolution = new Integer[currentSolution.length];
+                Integer[] intermediateSolution = new Integer[currentSolution.size()];
                 int anotherIndex = 0;
 
                 for (int sol : localSolution) {
@@ -61,7 +62,7 @@ public class ApplyLocalSearch extends AntPolicy<Integer, FlowShopEnvironment> {
                 }
 
                 double newMakespan = antForFlowShop.getScheduleMakespan(
-                        intermediateSolution, environment.getProblemRepresentation());
+                        Arrays.asList(intermediateSolution), environment.getProblemRepresentation());
 
                 if (newMakespan < makespan) {
                     makespan = newMakespan;
@@ -84,7 +85,7 @@ public class ApplyLocalSearch extends AntPolicy<Integer, FlowShopEnvironment> {
             localSolutionJobs[index] = job;
             index++;
         }
-        getAnt().setSolution(localSolutionJobs);
+        getAnt().setSolution(new ArrayList<>(Arrays.asList(localSolutionJobs)));
 
         return true;
     }
