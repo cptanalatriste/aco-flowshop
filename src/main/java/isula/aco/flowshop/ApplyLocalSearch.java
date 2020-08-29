@@ -27,61 +27,43 @@ public class ApplyLocalSearch extends AntPolicy<Integer, FlowShopEnvironment> {
                 + getAnt().getSolutionCost(environment) + ", Solution: "
                 + getAnt().getSolutionAsString());
 
-        // TODO(cgavidia): This needs a HUGE REFACTOR!
 
-        AntForFlowShop antForFlowShop = (AntForFlowShop) getAnt();
-        double makespan = getAnt().getSolutionCost(environment);
+        double bestMakespan = getAnt().getSolutionCost(environment);
+
         List<Integer> currentSolution = getAnt().getSolution();
-        Integer[] localSolutionJobs = new Integer[currentSolution.size()];
+        List<Integer> candidateSolution = new ArrayList<>(currentSolution);
 
-        List<Integer> jobsList = new ArrayList<>();
-
-        jobsList.addAll(currentSolution);
-
-        int indexI = 0;
+        int currentIndex = 0;
         boolean lessMakespan = true;
 
-        while (indexI < (currentSolution.size()) && lessMakespan) {
-            int jobI = jobsList.get(indexI);
-            jobsList.remove(indexI);
-            int indexJ = 0;
+        while (currentIndex < (currentSolution.size()) && lessMakespan) {
+            int currentJob = candidateSolution.get(currentIndex);
+            candidateSolution.remove(currentIndex);
+            int candidateIndex = 0;
 
-            while (indexJ < currentSolution.size() && lessMakespan) {
-                jobsList.add(indexJ, jobI);
+            while (candidateIndex < currentSolution.size() && lessMakespan) {
+                candidateSolution.add(candidateIndex, currentJob);
 
-                Integer[] intermediateSolution = new Integer[currentSolution.size()];
-                int anotherIndex = 0;
+                double candidateMakespan = AntForFlowShop.getScheduleMakespan(
+                        candidateSolution, environment.getProblemRepresentation());
 
-                for (int sol : jobsList) {
-                    intermediateSolution[anotherIndex] = sol;
-                    anotherIndex++;
-                }
-
-                double newMakespan = AntForFlowShop.getScheduleMakespan(
-                        Arrays.asList(intermediateSolution), environment.getProblemRepresentation());
-
-                if (newMakespan < makespan) {
-                    makespan = newMakespan;
+                if (candidateMakespan < bestMakespan) {
+                    bestMakespan = candidateMakespan;
                     lessMakespan = false;
                 } else {
-                    jobsList.remove(indexJ);
+                    candidateSolution.remove(candidateIndex);
                 }
 
-                indexJ++;
+                candidateIndex++;
             }
 
             if (lessMakespan) {
-                jobsList.add(indexI, jobI);
+                candidateSolution.add(currentIndex, currentJob);
             }
-            indexI++;
+            currentIndex++;
         }
 
-        int index = 0;
-        for (int job : jobsList) {
-            localSolutionJobs[index] = job;
-            index++;
-        }
-        getAnt().setSolution(new ArrayList<>(Arrays.asList(localSolutionJobs)));
+        getAnt().setSolution(candidateSolution);
 
         return true;
     }
