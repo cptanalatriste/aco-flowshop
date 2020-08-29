@@ -26,12 +26,12 @@ public class ProblemConfiguration implements MaxMinConfigurationProvider,
     public static final int Q = 1;
 
 
-    private static final int NUMBER_OF_ANTS = 1;
+    private static final int NUMBER_OF_ANTS = 20;
     private static final int VERY_IMPORTANT = 1;
     private static final int NOT_IMPORTANT = 0;
 
     private static final double EVAPORATION = 0.75;
-    private static final int MAX_ITERATIONS = 20000;
+    private static final int MAX_ITERATIONS = 1000;
 
     private FlowShopEnvironment environment;
     private double initialPheromone;

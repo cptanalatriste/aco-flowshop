@@ -28,6 +28,7 @@ import java.util.logging.Logger;
  */
 public class AcoFlowShopWithIsula {
 
+    private static final boolean DISPLAY_SOLUTION = true;
     private static Logger logger = Logger.getLogger(AcoFlowShopWithIsula.class
             .getName());
 
@@ -62,7 +63,10 @@ public class AcoFlowShopWithIsula {
                     new ApplyLocalSearch());
 
             solver.solveProblem();
-            showSolution(problemRepresentation, solver);
+
+            if (DISPLAY_SOLUTION) {
+                showSolution(problemRepresentation, solver);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -70,7 +74,7 @@ public class AcoFlowShopWithIsula {
     }
 
     private static AntColony<Integer, FlowShopEnvironment> getAntColony(ProblemConfiguration configurationProvider) {
-        return new AntColony<Integer, FlowShopEnvironment>(configurationProvider.getNumberOfAnts()) {
+        return new AntColony<>(configurationProvider.getNumberOfAnts()) {
             @Override
             protected Ant<Integer, FlowShopEnvironment> createAnt(FlowShopEnvironment environment) {
                 return new AntForFlowShop();
