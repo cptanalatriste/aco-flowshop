@@ -34,14 +34,14 @@ public class ApplyLocalSearch extends AntPolicy<Integer, FlowShopEnvironment> {
         List<Integer> candidateSolution = new ArrayList<>(currentSolution);
 
         int currentIndex = 0;
-        boolean lessMakespan = true;
+        boolean keepSearching = true;
 
-        while (currentIndex < (currentSolution.size()) && lessMakespan) {
+        while (currentIndex < (currentSolution.size()) && keepSearching) {
             int currentJob = candidateSolution.get(currentIndex);
             candidateSolution.remove(currentIndex);
             int candidateIndex = 0;
 
-            while (candidateIndex < currentSolution.size() && lessMakespan) {
+            while (candidateIndex < currentSolution.size() && keepSearching) {
                 candidateSolution.add(candidateIndex, currentJob);
 
                 double candidateMakespan = AntForFlowShop.getScheduleMakespan(
@@ -49,7 +49,7 @@ public class ApplyLocalSearch extends AntPolicy<Integer, FlowShopEnvironment> {
 
                 if (candidateMakespan < bestMakespan) {
                     bestMakespan = candidateMakespan;
-                    lessMakespan = false;
+                    keepSearching = false;
                 } else {
                     candidateSolution.remove(candidateIndex);
                 }
@@ -57,7 +57,7 @@ public class ApplyLocalSearch extends AntPolicy<Integer, FlowShopEnvironment> {
                 candidateIndex++;
             }
 
-            if (lessMakespan) {
+            if (keepSearching) {
                 candidateSolution.add(currentIndex, currentJob);
             }
             currentIndex++;
